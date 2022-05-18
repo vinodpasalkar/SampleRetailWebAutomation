@@ -58,6 +58,7 @@ Open index.html file in any browser to see the results.
 
 Below are sample report snapshots
 
+![screencapture-localhost-63342-SampleRetailWebAutomation-Reports-report-18-05-2022-23-02-42-9cd3e9850546fb126bf091f71329f8e4a4917c19f06f72692fd5528552b702e4-html-2022-05-18-23_07_33](https://user-images.githubusercontent.com/9302926/169169180-90d55bcc-78b9-4de9-8a1c-144308e26e39.jpg)
 
 I have used serenity framework here.
 
