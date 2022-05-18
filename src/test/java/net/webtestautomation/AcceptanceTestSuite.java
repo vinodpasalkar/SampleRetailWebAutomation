@@ -12,7 +12,7 @@ public class AcceptanceTestSuite extends SerenityStories {
 
 	
     @Managed(uniqueSession = false)
-    public WebDriver webdriver;
+    public static WebDriver webdriver;
 
     @BeforeStory
     public void beforeStory() {

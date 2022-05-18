@@ -64,7 +64,7 @@ public class ShoppingPage {
     private  String addToCartProduct = "//a[contains(@class,'button product_type_simple add_to_cart_button')]/following-sibling::div//div//div//span[contains(text(),'Add to wishlist')]";
 
     //Added this to use driver in this base class
-    private  WebDriver driver ;
+    private static WebDriver driver ;
 
     public ShoppingPage() {
 
@@ -181,7 +181,7 @@ public class ShoppingPage {
         //if(driver.findElements(By.xpath("//div[@class='yith-wcwl-add-button']")).size() > 0){
         if(driver.findElements(By.xpath(addToCartProduct)).size() > 0){
             scrollOnPage(driver.findElement(By.xpath(addToCartProduct)));
-            for(int i = 0; i < 4; i++){
+            for(int i = 1; i <= 4; i++){
                 new WebDriverWait(driver, 40).until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath(addToCartProduct)))).click();
                 while (true){
                     if ((Boolean) ((JavascriptExecutor)driver).executeScript("return jQuery.active == 0")){
@@ -190,7 +190,7 @@ public class ShoppingPage {
                     Thread.sleep(500);
                 }
 
-
+            System.out.println("Added "+ i+ ".  product ");
 
             }
             generateStep("Added 4 products into the wish list");
@@ -212,7 +212,9 @@ public class ShoppingPage {
 
         HashMap<Integer, String> map_final_products = new HashMap<Integer,String>();
         String productName = "//table//tbody//tr//td[3]";
-        String productPrice = "//table//tbody//tr//td[@class='product-price']//ins//span[contains(@class,'woocommerce-Price-amount amount')]//bdi";
+        String productPrice = "//table//tbody//tr//td[@class='product-price']";
+        // "//table//tbody//tr//td[@class='product-price']//ins//span[contains(@class,'woocommerce-Price-amount amount')]//bdi"
+        // "//table//tbody//tr//td[@class='product-price']"
         // "//table//tbody//tr//td[@class='product-price']//span[contains(@class,'woocommerce-Price-amount amount')]//bdi[1]//span"
 
         //Fetch All the Products Text
@@ -224,15 +226,20 @@ public class ShoppingPage {
         String product_price;
         int int_product_price;
         System.out.println("Size of products :" +list_of_products.size());
-        System.out.println("Size of pricess :" +list_of_products_price.size());
+        System.out.println("Size of prices :" +list_of_products_price.size());
 
         for(int i=0;i<list_of_products.size();i++) {
             product_name = list_of_products.get(i).getText();//Iterate and fetch product name
             product_price = list_of_products_price.get(i).getText();//Iterate and fetch product price
             product_price = product_price.replaceAll("[^0-9]", "");//Replace anything wil space other than numbers
+
+            if(product_price.length() > 4) {
+                product_price  = product_price.substring(4);
+            }
+
             int_product_price = Integer.parseInt(product_price);//Convert to Integer
             map_final_products.put(int_product_price,product_name);//Add product and price in HashMap
-            System.out.println("Added :" +int_product_price +" and" +product_name);
+            System.out.println("Added :   " +int_product_price +" and    " +product_name);
         }
 
         //Get all the keys from Hash Map
@@ -260,16 +267,17 @@ public class ShoppingPage {
         driver.findElement(By.xpath("//div[@class='header-right col-md-3 hidden-xs']//i[@class='la la-shopping-bag']")).click();
         String productName = " //a[contains(text(),'ProductName')]";
         String updateProductName = productName.replace("ProductName",cheapestProduct);
-
+        System.out.println("Value : "+ driver.findElement(By.xpath(updateProductName)).getAttribute("LinkText"));
         return driver.findElement(By.xpath(updateProductName)).getText();
 
     }
 
     public void addSpecificProductToCart(String cheapestProduct) {
-        String productCartbutton = "//table//tbody//tr//td[3]//a[contains(text(),'productName')]";
+        String productCartbutton = "//a[@aria-label='Add “ProductName” to your cart']";
         String updatedCartButton = productCartbutton.replace("ProductName",cheapestProduct);
         scrollOnPage(driver.findElement(By.xpath(updatedCartButton)));
         driver.findElement(By.xpath(updatedCartButton)).click();
+        driver.navigate().refresh();
         generateStep(cheapestProduct+" is added to the cart");
     }
 }
